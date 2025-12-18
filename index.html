@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>HBD, Des ✨</title>
+<style>
+
+.stage{
+  width:100%;
+  position:relative;
+}
+
+.curtain-overlay{
+  position:absolute;
+  top:160px; 
+  left:0;
+  width:100%;
+  height:calc(100% - 160px);
+  z-index:20;
+  overflow:hidden;
+  cursor:pointer;
+}
+
+.curtain{
+  position:absolute;
+  top:0;
+  width:50%;
+  height:100%;
+  background:linear-gradient(
+    180deg,
+    #f7c1d1,
+    #fce0ea
+  );
+  box-shadow:inset 0 0 40px rgba(183,110,121,.25);
+  transition:transform 1.2s cubic-bezier(.77,0,.18,1);
+}
+
+.curtain.left{
+  left:0;
+  transform:translateX(0);
+}
+
+.curtain.right{
+  right:0;
+  transform:translateX(0);
+}
+
+.curtain-overlay.open .curtain.left{
+  transform:translateX(-100%);
+}
+
+.curtain-overlay.open .curtain.right{
+  transform:translateX(100%);
+}
+
+.curtain-hint{
+  position:absolute;
+  top:14px;                
+  left:50%;
+  transform:translateX(-50%);
+  font-size:.9rem;
+  color:#8c5c50;
+  letter-spacing:2px;
+  opacity:.85;
+  pointer-events:none;
+  text-shadow: 0 2px 6px rgba(183,110,121,.25);
+  transition:opacity .6s ease, transform .6s ease;
+
+  animation:
+    hintPulse 2s infinite,
+    floatHint 3.5s ease-in-out infinite;
+}
+
+.curtain-overlay.open .curtain-hint{
+  opacity:0;
+  transform:translate(-50%, -18px);
+  transition:opacity .6s ease, transform .6s ease;
+  animation:none;
+}
+
+
+@keyframes floatHint{
+  0%,100%{
+    transform:translate(-50%, 0);
+  }
+  50%{
+    transform:translate(-50%, -6px); 
+  }
+}
+
+
+@keyframes hintPulse{
+  0%,100%{opacity:.4}
+  50%{opacity:1}
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(180deg,#fff1f6,#fff9fb);
+  font-family:'Segoe UI',sans-serif;color:#5a3e36;
+}
+.room{
+  width:100%;
+  max-width:1000px;
+  padding:50px 20px;
+  position:relative;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center; 
+}
+.title{
+  text-align:center;margin-bottom:10px;font-size:1.6rem;letter-spacing:1px;
+  color:#b76e79;font-weight:600;
+}
+.subtitle{
+  text-align:center;font-size:.95rem;color:#8c5c50;margin-bottom:40px;
+}
+.subtitle.hidden-line{
+  text-align:center;
+  font-size:.95rem;
+  color:#8c5c50;
+  margin-bottom:40px;
+
+  opacity:0;
+  transform:translateY(8px);
+  transition:opacity .9s ease, transform .9s ease;
+}
+
+.curtain-opened .subtitle.hidden-line{
+  opacity:1;
+  transform:translateY(0);
+}
+.lights{
+  position:relative;width:100%;height:140px;margin-bottom:20px;
+}
+.wire{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:100%;max-width:900px;height:120px;
+}
+.wire svg{width:100%;height:100%}
+.bulb{
+  fill:#ffd6e7;filter:drop-shadow(0 0 6px #ffd6e7);
+  animation:twinkle 3s infinite ease-in-out;
+}
+.bulb:nth-child(odd){animation-delay:1.5s}
+@keyframes twinkle{0%,100%{opacity:.6}50%{opacity:1}}
+
+.gallery{
+  display:flex;justify-content:center;
+  gap:26px;
+  flex-wrap:wrap;
+  margin-top:20px;
+  margin-bottom: 120px;
+}
+.polaroid{
+  width:150px;height:200px;perspective:1000px;cursor:pointer;
+}
+.card{
+  width:100%;height:100%;position:relative;transform-style:preserve-3d;
+  transition:transform .8s ease;
+}
+.polaroid.flip .card{transform:rotateY(180deg)}
+.side{
+  position:absolute;inset:0;border-radius:8px;backface-visibility:hidden;
+}
+.front{
+  background:#ffffff; 
+  padding:10px 10px 26px;
+  box-shadow:0 12px 22px rgba(183,110,121,.35);
+  border:1px solid #f2c6d3;
+}
+.front img{width:100%;height:120px;object-fit:cover;border-radius:6px}
+.front span{
+  display:block;margin-top:10px;font-size:.8rem;color:#b76e79;text-align:center;font-weight:600;
+}
+.back{
+  background:#ffffff; 
+  transform:rotateY(180deg);
+  padding:16px 14px 26px;
+  font-size:.8rem;
+  line-height:1.6;
+  color:#5a3e36;
+  box-shadow:0 12px 22px rgba(183,110,121,.35);
+  border:1px solid #f2c6d3;
+}
+.polaroid::before{
+  content:"";position:absolute;top:-36px;left:50%;width:2px;height:36px;
+  background:#f0b6c4;transform:translateX(-50%);
+}
+@media(max-width:600px){.polaroid{width:135px;height:185px}}
+.section-space{
+  height:140px;
+  position:relative;
+}
+
+.section-space::after{
+  content:"✦ ✦ ✦";
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  color:#f0b6c4;
+  letter-spacing:8px;
+  opacity:.6;
+}
+.tape-player{
+  margin:120px auto 80px auto;
+  width:180px;
+  cursor:pointer;
+  text-align:center;
+  opacity:.95;
+  transition:transform .2s ease, opacity .2s ease;
+  touch-action:manipulation;
+}
+
+.tape-player:hover{
+  transform:scale(1.05);
+  opacity:1;
+}
+
+.tape-player img{
+  width:100%;
+  height:auto;
+  user-select:none;
+  -webkit-user-drag:none;
+}
+
+.tape-player span{
+  display:block;
+  margin-top:6px;
+  font-size:1.2rem;
+  color:#b76e79;
+  font-style:italic;
+}
+
+.tape-player:active{
+  transform:scale(0.97);
+}
+
+.tape-player.playing img{
+  filter:drop-shadow(0 0 12px #f0b6c4);
+}
+
+
+
+</style>
+</head>
+<body>
+<div class="room">
+  <div class="title">(づ๑•ᴗ•๑)づ🎂 Happy 25th Birthday, Desty ✨</div>
+  <div class="subtitle hidden-line">
+    <span>some moments we never really outgrew (*ᴗ͈ˬᴗ͈)ꕤ*.ﾟ</span><br />
+  </div>
+  
+  <div class="curtain-overlay" onclick="openCurtain()">
+    <div class="curtain left"></div>
+    <div class="curtain right"></div>
+    <div class="curtain-hint">open gently ✨</div>
+  </div>
+  
+  <div class="stage">
+  <div class="lights">
+    <div class="wire">
+      <svg viewBox="0 0 900 120" preserveAspectRatio="none">
+        <path d="M0,60 C150,20 300,100 450,60 600,20 750,100 900,60" stroke="#f0b6c4" stroke-width="3" fill="none"/>
+        <circle class="bulb" cx="75" cy="55" r="6" />
+        <circle class="bulb" cx="175" cy="35" r="6" />
+        <circle class="bulb" cx="275" cy="75" r="6" />
+        <circle class="bulb" cx="375" cy="45" r="6" />
+        <circle class="bulb" cx="475" cy="70" r="6" />
+        <circle class="bulb" cx="575" cy="40" r="6" />
+        <circle class="bulb" cx="675" cy="80" r="6" />
+        <circle class="bulb" cx="775" cy="50" r="6" />
+        <circle class="bulb" cx="875" cy="65" r="6" />
+      </svg>
+    </div>
+  </div>
+
+  <div class="gallery">
+
+<div class="polaroid" onclick="flip(this)"><div class="card">
+  <div class="side front"><img src="photo01.jpg" /><span>movie day laughs 🍿🎥✮🎟️⋆˙</span></div>
+  <div class="side back">We didn’t know this would last.
+We were just kids, laughing easily, trusting everything.
+This was the beginning of something we couldn’t name yet.</div>
+</div></div>
+
+<div class="polaroid" onclick="flip(this)"><div class="card">
+  <div class="side front"><img src="photo02.jpg" /><span>break time crew</span></div>
+  <div class="side back">Highschool breaks were never really about the time.
+     They were about having people to sit with, laugh with,
+      and forget everything else for a whiles.</div>
+</div></div>
+
+<div class="polaroid" onclick="flip(this)"><div class="card">
+  <div class="side front"><img src="photo03.jpg" /><span>seventeen for you</span></div>
+  <div class="side back">Your seventeenth birthday didn’t need anything big.
+    Just being together, a small surprise,
+    and seeing you smile
+    was already enough to make it special.</div>
+</div></div>
+
+<div class="polaroid" onclick="flip(this)"><div class="card">
+  <div class="side front"><img src="photo04.jpg" /><span>between moments</span></div>
+  <div class="side back">Right after upacara, before class meeting started.
+    Nothing important was happening yet,
+    but this moment quietly became one.</div>
+</div></div>
+
+<div class="polaroid" onclick="flip(this)"><div class="card">
+  <div class="side front"><img src="photo05.jpg" /><span>still us</span></div>
+  <div class="side back">We were already in different schools by then,
+    living different routines, meeting different people.
+    But that day, it felt like nothing had really changed.</div>
+</div></div>
+
+<div class="polaroid" onclick="flip(this)"><div class="card">
+  <div class="side front"><img src="photo06.jpg" /><span>random afternoon</span></div>
+  <div class="side back">Countless afternoons at your house, finishing school projects slowly,
+     laughing in between,
+     taking photos just to remember how it felt.</div>
+</div></div>
+
+<div class="polaroid" onclick="flip(this)"><div class="card">
+  <div class="side front"><img src="photo07.jpg" /><span>us being us</span></div>
+  <div class="side back">Nothing special, just sitting next to each other,
+     sipping boba milk tea, talking about random things,
+     enjoying the quiet comfort.</div>
+</div></div>
+
+<div class="polaroid" onclick="flip(this)"><div class="card">
+  <div class="side front"><img src="photo08.jpg" /><span>its givin pinterest cutie</span></div>
+  <div class="side back">We looked silly and cute,
+     towels folded like sheep heads,
+     by the pool, laughing at ourselves.</div>
+</div></div>
+
+<div class="polaroid" onclick="flip(this)"><div class="card">
+  <div class="side front"><img src="photo09.jpg" /><span>supermarket trip!</span></div>
+  <div class="side back">Walking through supermarket aisles before a sleepover,
+    buying random snacks, posing goofily between shelves,
+    already feeling excited.</div>
+</div></div>
+
+<div class="polaroid" onclick="flip(this)"><div class="card">
+  <div class="side front"><img src="photo10.jpg" /><span>countless sleepover</span></div>
+  <div class="side back">Another sleepover night, towels folded into sheep heads again,
+    all of us together, belly full, heart full,
+    and completely ourselves.</div>
+</div></div>
+
+<div class="polaroid" onclick="flip(this)"><div class="card">
+  <div class="side front"><img src="photo11.jpg" /><span>supermarket - supermodel</span></div>
+  <div class="side back">Another supermarket walk, masks on, COVID still around,
+    catching up quickly before I had to return to college again.</div>
+</div></div>
+
+<div class="polaroid" onclick="flip(this)"><div class="card">
+  <div class="side front"><img src="photo12.jpg" /><span>semester catch-ups</span></div>
+  <div class="side back">Semester breaks meant long talks, quiet updates, 
+    shared stories, realizing distance never
+     really softened the closeness we kept.</div>
+</div></div>
+
+<div class="polaroid" onclick="flip(this)"><div class="card">
+  <div class="side front"><img src="photo13.jpg" /><span>cireng ayam chaos</span></div>
+  <div class="side back">Making cireng together, flour everywhere, hands sticky,
+     simple snacks turning into memories we still smile about.</div>
+</div></div>
+
+<div class="polaroid" onclick="flip(this)"><div class="card">
+  <div class="side front"><img src="photo14.jpg" /><span>croffle spiderman</span></div>
+  <div class="side back">Even with separate college lives, we always find our way back,
+    sharing croffles, laughing,
+    picking up conversations like nothing changed.</div>
+</div></div>
+
+<div class="polaroid" onclick="flip(this)"><div class="card">
+  <div class="side front"><img src="photo15.jpg" /><span>baking giggles</span></div>
+  <div class="side back">Baking together, posing goofily between steps, less about the results,
+    more about laughing through the mess we made.</div>
+</div></div>
+
+<div class="polaroid" onclick="flip(this)"><div class="card">
+  <div class="side front"><img src="photo16.jpg" /><span>night scooter stroll</span></div>
+  <div class="side back">Smiling widely, strolling KI at night,
+      scooters rolling through light drizzle,
+     semester break moments that felt calm and free.</div>
+</div></div>
+
+<div class="polaroid" onclick="flip(this)"><div class="card">
+  <div class="side front"><img src="photo17.jpg" /><span>one degree hotter</span></div>
+  <div class="side back">Your graduation day, standing proudly beside ya,
+     celebrating the degree you worked hard for, endlessly proud of ur journey.</div>
+</div></div>
+
+<div class="polaroid" onclick="flip(this)"><div class="card">
+  <div class="side front"><img src="photo18.jpg" /><span>domino nights</span></div>
+  <div class="side back">Domino pieces clicking,
+     another sleepover during semester break,
+     simple nights filled with laughter and easy togetherness.</div>
+</div></div>
+
+<div class="polaroid" onclick="flip(this)"><div class="card">
+  <div class="side front"><img src="photo19.jpg" /><span>sarinah stroll</span></div>
+  <div class="side back">Late-night hangouts after iced coffee, talking endlessly,
+     barely catching the very last KRL train,
+     laughing at how close we cut it.</div>
+</div></div>
+
+<div class="polaroid" onclick="flip(this)"><div class="card">
+  <div class="side front"><img src="photo20.jpg" /><span>blok m walks</span></div>
+  <div class="side back">Photobooth day with all of us,
+     matching blue outfits, silly poses,
+     capturing friendship in frames we’ll always come back to.</div>
+</div></div>
+
+<div class="polaroid" onclick="flip(this)"><div class="card">
+  <div class="side front"><img src="photo21.jpg" /><span>my final</span></div>
+  <div class="side back">Right after my thesis defense, you were there, not just supporting,
+     but sharing the relief and joy of my final day.</div>
+</div></div>
+
+<div class="polaroid" onclick="flip(this)"><div class="card">
+  <div class="side front"><img src="photo22.jpg" /><span>twinkle twinkle little star</span></div>
+  <div class="side back">Polaroids capturing us eight together, signing a big star, another sleepover night,
+     memories layered with laughter and shared presence.</div>
+</div></div>
+
+<div class="polaroid" onclick="flip(this)"><div class="card">
+  <div class="side front"><img src="photo23.jpg" /><span>mandatory photobooth</span></div>
+  <div class="side back">A photobooth moment in our twenties, graduated,
+     some far apart now, yet still reconnecting easily,
+     picking up where we left off.</div>
+</div></div>
+
+<div class="polaroid" onclick="flip(this)"><div class="card">
+  <div class="side front"><img src="photo24.jpg" /><span>lebaran warmth</span></div>
+  <div class="side back">Lebaran day filled with good food, loud laughter,
+     full bellies, fuller hearts,
+     a moment of gratitude we quietly held onto.</div>
+</div></div>
+
+<div class="polaroid" onclick="flip(this)"><div class="card">
+  <div class="side front"><img src="photo25.jpg" /><span>more of night stroll</span></div>
+  <div class="side back">Night strolls eating sate taichan, long talks after office hours,
+     catching up on everything,
+     letting stories flow without rushing home.</div>
+</div></div>
+</div> 
+
+<div class="section-space"></div>
+<div class="tape-player" onclick="toggleTape()">
+  <img src="tape.png" alt="voice note" />
+  <span>press play</span>
+  <audio id="voiceNote" src="birthday-vn.mp3"></audio>
+</div>
+
+<audio
+  id="bgMusic"
+  src="bg-music.mp3"
+  loop
+  preload="auto"
+  playsinline
+></audio>
+
+
+<script>
+function openCurtain(){
+  const curtain = document.querySelector('.curtain-overlay');
+  const bgMusic = document.getElementById('bgMusic');
+  const room = document.querySelector('.room');
+
+  curtain.classList.add('open');
+  room.classList.add('curtain-opened');
+
+  bgMusic.volume = 0.3;
+  bgMusic.play();
+
+  setTimeout(()=>{
+    curtain.style.pointerEvents = 'none';
+    curtain.style.opacity = '0';
+    curtain.style.zIndex = '-1';
+  },1200);
+}
+
+
+
+function flip(el){el.classList.toggle('flip')}
+
+function flip(el){
+  el.classList.toggle('flip')
+}
+
+function toggleTape(){
+  const audio = document.getElementById('voiceNote');
+  const player = document.querySelector('.tape-player');
+  const label = player.querySelector('span');
+
+  if(audio.paused){
+    audio.play();
+    label.innerText = "listening…";
+    player.classList.add('playing');
+  } else {
+    audio.pause();
+    audio.currentTime = 0;
+    label.innerText = "press play";
+    player.classList.remove('playing');
+  }
+
+  audio.onended = () => {
+    label.innerText = "press play";
+    player.classList.remove('playing');
+    audio.currentTime = 0;
+  };
+}
+
+</script>
+</body>
+</html>
